@@ -1,9 +1,10 @@
 # app.py
-from flask import Flask, render_template
-from flask import current_app, flash, jsonify, make_response, redirect, request, url_for
+from flask import Flask,render_template, jsonify, make_response,abort
 import json
+import os
 
 app = Flask(__name__)
+port = int(os.environ.get("PORT",5000))
 books = json.load(open("Data/books.json"))
 
 @app.route('/')
@@ -18,12 +19,13 @@ def get_books():
 def get_book_title(title):
 	book = [book for book in books if book["title"] == title ]
 	if len(book) ==0:
-		print(404,"Book with title::{} does not exit".format(title))
+		abort(404,"Book with title::{} does not exit".format(title))
 	return jsonify({"books":book})
 
 @app.errorhandler(404)
 def not_found(error):
 	return make_response(jsonify({'error':'Not Found'}),404)
 
+#run at http://0.0.0.0:5000
 if __name__ == "__main__":        
-    app.run(debug=True,host='0.0.0.0',port=5000)                 
+    app.run(debug=True,host='0.0.0.0',port=port)                 

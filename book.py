@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask,render_template, jsonify, make_response,abort
+from flask import Flask,render_template, jsonify, make_response,abort, url_for, request
 import json
 import os
 
@@ -7,15 +7,18 @@ app = Flask(__name__)
 port = int(os.environ.get("PORT",5000))
 books = json.load(open("Data/books.json"))
 
-@app.route('/')
+@app.route('/',methods=['POST','GET'])
 def index():
-	return 'API Tutorials with Flask.eg /api/v1/books to see books'
+	if request.method == 'POST':
+		return 'Hello'
+	else:
+		return render_template('index.html')
 
-@app.route('/api/v1/books',methods=['GET'])
+@app.route('/api/books',methods=['GET'])
 def get_books():
 	return jsonify({"books":books})
 
-@app.route('/api/v1/books/<string:title>',methods=['GET'])
+@app.route('/api/books/<string:title>',methods=['GET'])
 def get_book_title(title):
 	book = [book for book in books if book["title"] == title ]
 	if len(book) ==0:

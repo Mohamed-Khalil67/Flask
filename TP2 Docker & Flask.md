@@ -62,7 +62,7 @@
     - To create the container onto Heroku
   - heroku container:release web --app bookapp67
 
-- Mettre à jour :
+- Mettre à jour l'api :
 
   - les mêmes étapes avec une changement de tag
     - Alors , bookapp67.01 et bookapp67.02

@@ -8,10 +8,10 @@ port = int(os.environ.get("PORT",5000))
 books = json.load(open("Data/books.json"))
 
 
-@app.route('/',methods=['POST','GET'])
+@app.route('/')
 def index():
 	""" Search Bar to seach for Books """
-	return render_template('index.html')
+	return render_template('index.jinja2')
 
 @app.route('/api/books',methods=['GET'])
 def get_books():
@@ -25,6 +25,13 @@ def get_book_title(title):
 	if len(book) ==0:
 		abort(404,"Book with title::{} does not exit".format(title))
 	return jsonify({"books":book})
+
+@app.route('/api/book',methods=['GET'])
+def get_book_name():
+	""" Get A book title details """
+	title = [request.args.get("title")]
+	book = [book for book in books if book["title"] == title ]
+	return render_template('index.jinja2',result=jsonify({"books":book}))
 
 @app.errorhandler(404)
 def not_found(error):

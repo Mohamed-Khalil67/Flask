@@ -5,13 +5,15 @@ import os
 
 app = Flask(__name__)
 port = int(os.environ.get("PORT",5000))
-books = json.load(open("Data/books.json"))
+
+with open('Data/books.json') as json_file:
+	books = json.load(json_file.read())
 
 
 @app.route('/')
 def index():
 	""" Search Bar to seach for Books """
-	return render_template('index.jinja2')
+	return render_template('Show_Book.jinja2')
 
 @app.route('/api/books',methods=['GET'])
 def get_books():
@@ -27,11 +29,11 @@ def get_book_title(title):
 	return jsonify({"books":book})
 
 @app.route('/api/book',methods=['GET'])
-def get_book_name():
+def get_book_details():
 	""" Get A book title details """
-	title = [request.args.get("title")]
+	title = books["title"]
 	book = [book for book in books if book["title"] == title ]
-	return render_template('index.jinja2',result=jsonify({"books":book}))
+	return render_template('Show_Book.jinja2',result=request.json['title'][0])
 
 @app.errorhandler(404)
 def not_found(error):
